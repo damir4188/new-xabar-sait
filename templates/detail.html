@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="{% url 'home' %}" class="navbar__logo">📰 Yangi<span>lik</span></a>
+    <div class="navbar__links">
+        {% if user.is_authenticated %}
+            <span style="color: var(--text-muted); font-size: 14px;">👤 {{ user.username }}</span>
+            <a href="{% url 'logout' %}">Chiqish</a>
+        {% else %}
+            <a href="{% url 'login' %}">Kirish</a>
+            <a href="{% url 'register' %}" class="btn btn-primary">Ro'yxatdan o'tish</a>
+        {% endif %}
+    </div>
+</nav>
+
+<div class="container" style="max-width: 860px;">
+    <div class="article-header">
+        {% if article.category %}
+            <span class="card__category">{{ article.category.name }}</span>
+        {% endif %}
+        <h1 style="margin-top: 16px;">{{ article.title }}</h1>
+        <div class="article-meta">
+            <span>✍️ {{ article.author.username }}</span>
+            <span>📅 {{ article.created_at|date:"d.m.Y H:i" }}</span>
+            <span>👁 {{ article.views }} ko'rildi</span>
+            {% if user.is_authenticated %}
+            <button class="like-btn {% if user_liked %}liked{% endif %}"
+                    data-id="{{ article.pk }}">
+                <span class="heart">❤️</span>
+                <span class="like-count">{{ likes_count }}</span> like
+            </button>
+            {% else %}
+            <a href="{% url 'login' %}" class="like-btn">
+                <span class="heart">❤️</span> {{ likes_count }} like
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if article.image %}
+        <img src="{{ article.image.url }}" alt="{{ article.title }}" class="article-img">
+    {% endif %}
+
+    <div class="article-content">
+        {{ article.content|linebreaks }}
+    </div>
+
+    <div class="comments-section">
+        <h3>💬 Izohlar ({{ comments.count }})</h3>
+
+        {% for comment in comments %}
+        <div class="comment-item">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="comment-item__author">{{ comment.user.username }}</span>
+                <span class="comment-item__date">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+            </div>
+            <p class="comment-item__text">{{ comment.text }}</p>
+        </div>
+        {% empty %}
+        <p style="color: var(--text-muted); font-size: 14px;">Hali izoh yo'q. Birinchi bo'lib yozing!</p>
+        {% endfor %}
+
+        <div class="comment-form">
+            {% if user.is_authenticated %}
+                <h4 style="margin-bottom: 12px; color: var(--text);">Izoh qoldiring</h4>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ comment_form.text }}
+                    <button type="submit" class="btn btn-primary">Yuborish</button>
+                </form>
+            {% else %}
+                <p style="color: var(--text-muted); font-size: 14px;">
+                    Izoh yozish uchun <a href="{% url 'login' %}" style="color: var(--accent);">kiring</a>
+                    yoki <a href="{% url 'register' %}" style="color: var(--accent);">ro'yxatdan o'ting</a>.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+        <a href="{% url 'home' %}" class="btn btn-outline">← Orqaga</a>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>© 2025 YangilikSayti. Barcha huquqlar himoyalangan.</p>
+</footer>
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
