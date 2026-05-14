@@ -55,7 +55,7 @@
     </div>
 
     <div class="comments-section">
-        <h3>💬 Izohlar ({{ comments.count }})</h3>
+        <h3> ({{ comments.count }})</h3>
 
         {% for comment in comments %}
         <div class="comment-item">
@@ -66,33 +66,33 @@
             <p class="comment-item__text">{{ comment.text }}</p>
         </div>
         {% empty %}
-        <p style="color: var(--text-muted); font-size: 14px;">Hali izoh yo'q. Birinchi bo'lib yozing!</p>
+        <p style="color: var(--text-muted); font-size: 14px;">!</p>
         {% endfor %}
 
         <div class="comment-form">
             {% if user.is_authenticated %}
-                <h4 style="margin-bottom: 12px; color: var(--text);">Izoh qoldiring</h4>
+                <h4 style="margin-bottom: 12px; color: var(--text);">Layik basin</h4>
                 <form method="post">
                     {% csrf_token %}
                     {{ comment_form.text }}
-                    <button type="submit" class="btn btn-primary">Yuborish</button>
+                    <button type="submit" class="btn btn-primary">Jiberiw</button>
                 </form>
             {% else %}
                 <p style="color: var(--text-muted); font-size: 14px;">
-                    Izoh yozish uchun <a href="{% url 'login' %}" style="color: var(--accent);">kiring</a>
-                    yoki <a href="{% url 'register' %}" style="color: var(--accent);">ro'yxatdan o'ting</a>.
+                     <a href="{% url 'login' %}" style="color: var(--accent);">Kiriw</a>
+                    yoki <a href="{% url 'register' %}" style="color: var(--accent);">registerasyadan otin</a>.
                 </p>
             {% endif %}
         </div>
     </div>
 
     <div style="margin-top: 24px;">
-        <a href="{% url 'home' %}" class="btn btn-outline">← Orqaga</a>
+        <a href="{% url 'home' %}" class="btn btn-outline">← Izge</a>
     </div>
 </div>
 
 <footer class="footer">
-    <p>© 2025 YangilikSayti. Barcha huquqlar himoyalangan.</p>
+    <p></p>
 </footer>
 
 <script src="{% static 'js/main.js' %}"></script>
